@@ -1,40 +1,53 @@
-
 import React, { useState, useMemo, useCallback } from "react";
 import ProductList from "./ProductList";
 
-const App = () => {
+const initialProducts = [
+  { id: 1, name: "A", price: 100 },
+  { id: 2, name: "B", price: 200 },
+];
+
+function App() {
+  const [products, setProducts] = useState(initialProducts);
   const [counter, setCounter] = useState(0);
 
-  const products = [
-    { id: 1, name: "Laptop", price: 1000 },
-    { id: 2, name: "Phone", price: 500 },
-    { id: 3, name: "Tablet", price: 300 },
-    
-  ];
-
-  
   const totalPrice = useMemo(() => {
-    console.log("Recalculating total price...");
+    console.log("Calculating total price");
     return products.reduce((sum, p) => sum + p.price, 0);
   }, [products]);
 
-  
-  const handleProductSelect = useCallback((product) => {
-    console.log("Selected product:", product.name);
+  const handleSelect = useCallback((id) => {
+    console.log("Selected product:", id);
   }, []);
+
+  const addItem = () => {
+    setProducts((prev) => [
+      ...prev,
+      {
+        id: prev.length + 1,
+        name: `Item ${prev.length + 1}`,
+        price: 100,
+      },
+    ]);
+  };
 
   return (
     <div>
-      <h1>React Performance Optimization</h1>
-      <p>Total Price: ${totalPrice}</p>
+      <h2>Total Price: {totalPrice}</h2>
 
       <button onClick={() => setCounter(counter + 1)}>
-        Increment Counter ({counter})
+        Counter: {counter}
       </button>
 
-      <ProductList products={products} onSelect={handleProductSelect} />
+      <button onClick={addItem}>
+        Add Item
+      </button>
+
+      <ProductList
+        products={products}
+        onSelect={handleSelect}
+      />
     </div>
   );
-};
+}
 
 export default App;
